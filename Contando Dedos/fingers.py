@@ -18,6 +18,12 @@ try:
         # converting the image from BGR to RGB for processing in MediaPipe
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         results = Hand.process(imgRGB)
+        hands_points = results.multi_hand_landmarks
+
+        # returning the coordinates for each point
+        if hands_points:
+            for points in hands_points:
+                print(points)
 
         cv2.imshow('Imagem', img)
         cv2.waitKey(1)
