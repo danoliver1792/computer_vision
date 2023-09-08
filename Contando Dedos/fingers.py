@@ -48,7 +48,9 @@ try:
                     for x in fingers:
                         if landmarks[x][1] < landmarks[x - 2][1]:
                             cont += 1
-                print(cont)
+
+                # showing the information
+                cv2.putText(img, str(cont), (100, 100), cv2.FONT_HERSHEY_SIMPLEX, 4, (255, 0, 0), 5)
 
         cv2.imshow('Imagem', img)
         cv2.waitKey(1)
