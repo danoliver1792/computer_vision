@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import tensorflow
 from keras.models import load_model
 
 video = cv2.VideoCapture(0, cv2.CAP_DSHOW)
@@ -45,6 +44,7 @@ while True:
     img = cv2.resize(img, (640, 480))
     img_pre = pre_process(img)
     countors, h1 = cv2.findContours(img_pre, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    qtd = 0
 
     # looping through the contour variable to identify each individual object
     for cnt in countors:
@@ -57,7 +57,16 @@ while True:
             # training the neural network to recognize coins
             cut = img[y:y + h, x:x + w]
             classe, conf = detect_coin(cut)
-            cv2.putText(img, str(classe), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+            if conf > 0.7:
+                cv2.putText(img, str(classe), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+                if classe == '1 real':
+                    qtd += 1
+                elif classe == '25 cent':
+                    qtd += 0.25
+                elif classe == '50 cent':
+                    qtd += 0.5
+    cv2.rectangle(img, (430, 30), (600, 80), (0, 0, 255), -1)
+    cv2.putText(img, f'RS {qtd}', (440, 67), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (255, 255, 255), 2)
 
     cv2.imshow('Image', img)
     cv2.imshow('Image Pre', img_pre)
